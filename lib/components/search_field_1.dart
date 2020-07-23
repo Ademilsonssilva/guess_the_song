@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class SearchField1 extends StatefulWidget {
   @override
@@ -28,7 +31,10 @@ class _SearchField1State extends State<SearchField1> {
                     Icons.send,
                   ),
                   onPressed: () {
-
+                    http.get('https://api.deezer.com/album/302127').then((value) {
+                      print(json.decode(value.body));
+                    });
+                    //print("hello bitches");
                   },
                 )
               ),
