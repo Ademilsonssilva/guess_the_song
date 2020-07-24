@@ -5,12 +5,12 @@ import 'package:guess_the_song/model/game_mode_option.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class SearchField1 extends StatefulWidget {
+class CreateMatchSelection extends StatefulWidget {
   @override
-  _SearchField1State createState() => _SearchField1State();
+  _CreateMatchSelectionState createState() => _CreateMatchSelectionState();
 }
 
-class _SearchField1State extends State<SearchField1> {
+class _CreateMatchSelectionState extends State<CreateMatchSelection> {
 
   var _search_type_options = ['album', 'artist', 'playlist'];
   String _selected_search_type_option = 'album';
@@ -32,6 +32,12 @@ class _SearchField1State extends State<SearchField1> {
               Expanded(
                 child: TextField(
                   controller: _search_controller,
+                  onSubmitted: (submit) {
+                    setState(() {
+                      print('submitou');
+                      search();
+                    });
+                  },
                   decoration: InputDecoration(
                       prefix: Padding(
                         padding: EdgeInsets.only(right: 15.0),
@@ -66,7 +72,7 @@ class _SearchField1State extends State<SearchField1> {
                       height: 200.0,
                       alignment: Alignment.center,
                       child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
                         strokeWidth: 5.0,
                       ),
                     );
@@ -88,8 +94,8 @@ class _SearchField1State extends State<SearchField1> {
     return ListView.builder(
         itemCount: _search_result.length,
         itemBuilder: (context, index) {
-          print(snapshot.data[index]);
-          return snapshot.data[index].getListTile();
+//          print(snapshot.data[index]);
+          return snapshot.data[index].getListTile(context);
 //          return ListTile(
 //            title: Text(snapshot.data[index].toString()),
 //          );
@@ -116,6 +122,11 @@ class _SearchField1State extends State<SearchField1> {
   }
 
   Future<List> search() async {
+
+    if (_search_controller.text == '') {
+      _search_result = [];
+      return Future.value([]);
+    }
 
     String search = _deezer_api_search_path + _selected_search_type_option + '?q="' + _search_controller.text +'"';
 

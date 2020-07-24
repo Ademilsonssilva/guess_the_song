@@ -1,27 +1,24 @@
 import 'package:flutter/material.dart';
-import 'model.dart';
-import 'game_mode_option.dart';
+import 'package:guess_the_song/model/game_mode_option.dart';
 
-class Album extends GameModeOption {
+class Artist extends GameModeOption{
 
   int _id;
-  String _title;
+  String _name;
   String _link;
-  String _cover_url;
-  int _genre_id;
-  int _nb_tracks;
-  int _artist_id;
-  String _artist_name;
+  String _picture_path;
+  int _nb_fans;
+  int _nb_album;
+  String _tracklist_path;
 
-  Album.fromMap(Map<String, dynamic> map) {
+  Artist.fromMap(Map<String, dynamic> map) {
     _id = map['id'];
-    _title = map['title'];
+    _name = map['name'];
     _link = map['link'];
-    _cover_url = map['cover'];
-    _genre_id = map['genre_id'];
-    _nb_tracks = map['nb_tracks'];
-    _artist_id = map['artist']['id'];
-    _artist_name = map['artist']['name'];
+    _picture_path = map['picture'];
+    _nb_fans = map['nb_fans'];
+    _nb_album = map['nb_album'];
+    _tracklist_path = map['tracklist'];
     type = map['type'];
   }
 
@@ -35,7 +32,7 @@ class Album extends GameModeOption {
               Padding(
                 padding: EdgeInsets.all(10),
                 child: Image.network(
-                  _cover_url,
+                  _picture_path,
                   width: 80,
                   height: 80,
                 ),
@@ -43,21 +40,16 @@ class Album extends GameModeOption {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text("Album: " + _title,
+                  Text("Artist: " + _name,
                     style: TextStyle(
-                      fontSize: 16
+                        fontSize: 16
                     ),
                   ),
-                  Text("Artist: " + _artist_name,
+                  Text("Number of albuns: " + _nb_album.toString(),
                     style: TextStyle(
-                      fontSize: 14
+                        fontSize: 14
                     ),
                   ),
-                  Text("Number of tracks: " + _nb_tracks.toString(),
-                    style: TextStyle(
-                      fontSize: 12
-                    )
-                  )
                 ],
               )
             ],
@@ -76,7 +68,7 @@ class Album extends GameModeOption {
   @override
   AlertDialog getAlertDialogDetails(){
     return AlertDialog(
-      title: Text('Playlist ' + _title),
+      title: Text('Artist ' + _name),
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -85,14 +77,14 @@ class Album extends GameModeOption {
             padding: EdgeInsets.all(12),
             child: Center(
               child: CircleAvatar(
-                backgroundImage: NetworkImage(_cover_url),
+                backgroundImage: NetworkImage(_picture_path),
                 radius: 65,
               ),
             ),
           ),
-          Text('Title: ' + _title),
-          Text('Number of tracks: ' + _nb_tracks.toString()),
-          Text('Artist: ' + _artist_name),
+          Text('Artist: ' + _name),
+          Text('Link: ' + _link),
+          Text('Number of albuns: ' + _nb_album.toString()),
         ],
       ),
     );
@@ -100,7 +92,7 @@ class Album extends GameModeOption {
 
   @override
   toString () {
-    return '${_id}: ${_title}';
+    return '${_id}: ${_name}';
   }
 
 }

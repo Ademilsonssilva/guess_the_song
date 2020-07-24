@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:guess_the_song/components/search_field_1.dart';
+import 'package:guess_the_song/components/create_match_selection.dart';
 
 void main()
 {
@@ -10,7 +10,7 @@ void main()
         title: Text("Guess the song - The game"),
         centerTitle: true,
       ),
-      body: SearchField1(),
+      body: CreateMatchSelection(),
 //
     ),
   ));

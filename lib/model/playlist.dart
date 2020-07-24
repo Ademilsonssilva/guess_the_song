@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
-import 'model.dart';
-import 'game_mode_option.dart';
+import 'package:guess_the_song/model/game_mode_option.dart';
 
-class Album extends GameModeOption {
+class Playlist extends GameModeOption{
 
   int _id;
   String _title;
-  String _link;
-  String _cover_url;
-  int _genre_id;
+  bool _public;
   int _nb_tracks;
-  int _artist_id;
-  String _artist_name;
+  String _link;
+  String _picture_path;
+  String _tracklist;
+  int _user_id;
+  String _user_name;
 
-  Album.fromMap(Map<String, dynamic> map) {
+
+  Playlist.fromMap(Map<String, dynamic> map) {
     _id = map['id'];
     _title = map['title'];
-    _link = map['link'];
-    _cover_url = map['cover'];
-    _genre_id = map['genre_id'];
+    _public = map['public'];
     _nb_tracks = map['nb_tracks'];
-    _artist_id = map['artist']['id'];
-    _artist_name = map['artist']['name'];
+    _link = map['link'];
+    _picture_path = map['picture'];
+    _tracklist = map['tracklist'];
+    _user_id = map['user']['id'];
+    _user_name = map['user']['name'];
     type = map['type'];
   }
 
@@ -35,7 +37,7 @@ class Album extends GameModeOption {
               Padding(
                 padding: EdgeInsets.all(10),
                 child: Image.network(
-                  _cover_url,
+                  _picture_path,
                   width: 80,
                   height: 80,
                 ),
@@ -43,21 +45,16 @@ class Album extends GameModeOption {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text("Album: " + _title,
+                  Text("" + (_title.length <= 30 ? _title : _title.substring(0, 29) + '...'),
                     style: TextStyle(
-                      fontSize: 16
-                    ),
-                  ),
-                  Text("Artist: " + _artist_name,
-                    style: TextStyle(
-                      fontSize: 14
+                        fontSize: 16
                     ),
                   ),
                   Text("Number of tracks: " + _nb_tracks.toString(),
                     style: TextStyle(
-                      fontSize: 12
-                    )
-                  )
+                        fontSize: 14
+                    ),
+                  ),
                 ],
               )
             ],
@@ -85,14 +82,15 @@ class Album extends GameModeOption {
             padding: EdgeInsets.all(12),
             child: Center(
               child: CircleAvatar(
-                backgroundImage: NetworkImage(_cover_url),
+                backgroundImage: NetworkImage(_picture_path),
                 radius: 65,
               ),
             ),
           ),
           Text('Title: ' + _title),
+          Text('Public: ' + (_public ? 'Yes' : 'No')),
           Text('Number of tracks: ' + _nb_tracks.toString()),
-          Text('Artist: ' + _artist_name),
+          Text('User: ' + _user_name),
         ],
       ),
     );
