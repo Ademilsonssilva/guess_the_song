@@ -24,8 +24,11 @@ class _CreateMatchSelectionState extends State<CreateMatchSelection> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Sei la"),
+      ),
+      body: Column(
         children: <Widget>[
           Row(
             children: [
