@@ -1,4 +1,4 @@
-package com.example.guess_the_song
+package com.ademilsonssilva.guess_the_song
 
 import io.flutter.embedding.android.FlutterActivity
 
