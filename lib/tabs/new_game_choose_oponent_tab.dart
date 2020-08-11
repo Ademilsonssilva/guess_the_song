@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:guess_the_song/model/match.dart';
 import 'package:guess_the_song/model/user.dart';
+import 'package:guess_the_song/utils/session.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -29,6 +31,9 @@ class _NewGameChooseOpponentTabState extends State<NewGameChooseOpponentTab> {
 
     return ScopedModelDescendant<User>(
       builder: (context, child, model){
+
+//        print(widget.new_match);
+
         return ListView(
             children: [
               Padding(
@@ -46,7 +51,7 @@ class _NewGameChooseOpponentTabState extends State<NewGameChooseOpponentTab> {
               Center(
                 child: LinearPercentIndicator(
                   progressColor: Theme.of(context).primaryColor,
-                  percent: 0,
+                  percent: 0.33,
                   padding: EdgeInsets.all(30),
                   lineHeight: 20,
                   center: Text("50%", style: TextStyle(color: Colors.black, fontSize: 20),),
@@ -164,6 +169,7 @@ class _NewGameChooseOpponentTabState extends State<NewGameChooseOpponentTab> {
                       ),
                     ),
                     onPressed: () {
+                      Session.new_match.visitorPlayer = selectedPlayer;
                       widget.controller.jumpToPage(1);
                     },
                   ),

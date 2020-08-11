@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'model.dart';
-import 'game_mode_option.dart';
+import 'repository.dart';
 
-class Album extends GameModeOption {
+class Album extends Repository {
 
   int _id;
   String _title;
@@ -25,52 +25,46 @@ class Album extends GameModeOption {
     type = map['type'];
   }
 
+  int getId()
+  {
+    return _id;
+  }
+
   Widget getListTile(BuildContext context){
-    return GestureDetector(
-      child: Padding(
-        padding: EdgeInsets.all(10),
-        child: Card(
-          child: Row(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: Image.network(
-                  _cover_url,
-                  width: 80,
-                  height: 80,
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text("Album: " + _title,
-                    style: TextStyle(
-                      fontSize: 16
-                    ),
-                  ),
-                  Text("Artist: " + _artist_name,
-                    style: TextStyle(
-                      fontSize: 14
-                    ),
-                  ),
-                  Text("Number of tracks: " + _nb_tracks.toString(),
-                    style: TextStyle(
-                      fontSize: 12
-                    )
-                  )
-                ],
-              )
-            ],
+
+    return Row(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.all(10),
+          child: Image.network(
+            _cover_url,
+            width: 80,
+            height: 80,
           ),
         ),
-      ),
-      onTap: () {
-        print(this.toString());
-      },
-      onLongPress: () {
-        this.showDetails(context);
-      },
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text("Album: " + _title,
+              style: TextStyle(
+                  fontSize: 16
+              ),
+            ),
+            Text("Artist: " + _artist_name,
+              style: TextStyle(
+                  fontSize: 14
+              ),
+            ),
+            Text("Number of tracks: " + _nb_tracks.toString(),
+                style: TextStyle(
+                    fontSize: 12
+                )
+            )
+          ],
+        )
+      ],
     );
+
   }
 
   @override

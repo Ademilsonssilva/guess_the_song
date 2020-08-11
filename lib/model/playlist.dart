@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:guess_the_song/model/game_mode_option.dart';
+import 'package:guess_the_song/model/repository.dart';
 
-class Playlist extends GameModeOption{
+class Playlist extends Repository{
 
   int _id;
   String _title;
@@ -27,46 +27,38 @@ class Playlist extends GameModeOption{
     type = map['type'];
   }
 
+  int getId()
+  {
+    return _id;
+  }
+
   Widget getListTile(BuildContext context){
-    return GestureDetector(
-      child: Padding(
-        padding: EdgeInsets.all(10),
-        child: Card(
-          child: Row(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: Image.network(
-                  _picture_path,
-                  width: 80,
-                  height: 80,
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text("" + (_title.length <= 30 ? _title : _title.substring(0, 29) + '...'),
-                    style: TextStyle(
-                        fontSize: 16
-                    ),
-                  ),
-                  Text("Number of tracks: " + _nb_tracks.toString(),
-                    style: TextStyle(
-                        fontSize: 14
-                    ),
-                  ),
-                ],
-              )
-            ],
+    return Row(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.all(10),
+          child: Image.network(
+            _picture_path,
+            width: 80,
+            height: 80,
           ),
         ),
-      ),
-      onTap: () {
-        print(this.toString());
-      },
-      onLongPress: () {
-        this.showDetails(context);
-      },
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text("" + (_title.length <= 30 ? _title : _title.substring(0, 29) + '...'),
+              style: TextStyle(
+                  fontSize: 16
+              ),
+            ),
+            Text("Number of tracks: " + _nb_tracks.toString(),
+              style: TextStyle(
+                  fontSize: 14
+              ),
+            ),
+          ],
+        )
+      ],
     );
   }
 

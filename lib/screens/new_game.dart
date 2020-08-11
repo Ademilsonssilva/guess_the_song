@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:guess_the_song/components/appbar.dart';
+import 'package:guess_the_song/model/match.dart';
+import 'package:guess_the_song/model/player.dart';
 import 'package:guess_the_song/model/user.dart';
+import 'package:guess_the_song/tabs/new_game_choose_match_configs.dart';
+import 'package:guess_the_song/tabs/new_game_choose_music_repository_tab.dart';
 import 'package:guess_the_song/tabs/new_game_choose_oponent_tab.dart';
+import 'package:guess_the_song/utils/session.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:guess_the_song/utils/session.dart';
 
 class NewGame extends StatefulWidget {
+
+  Player player;
+
+  NewGame(this.player);
+
   @override
   _NewGameState createState() => _NewGameState();
 }
@@ -13,28 +24,32 @@ class _NewGameState extends State<NewGame> {
 
   final _pageController = PageController();
 
+  Match new_match = Match();
+
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<User>(
-      builder: (context, child, model){
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: Theme.of(context).primaryColor,
-            title: Text("Novo jogo"),
-            centerTitle: true,
-          ),
-          body: PageView(
-            controller: _pageController,
-            physics: NeverScrollableScrollPhysics(),
-            children: <Widget>[
-              NewGameChooseOpponentTab(_pageController),
-              Scaffold(
-                body: Container(child: Text('tela 2'),),
-              )
-            ],
-          ),
-        );
-      }
+
+    Session.new_match = new_match;
+
+    Session.new_match.hostPlayer = widget.player.id;
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
+        title: Text("Novo jogo"),
+        centerTitle: true,
+      ),
+      body: PageView(
+        controller: _pageController,
+        physics: NeverScrollableScrollPhysics(),
+        children: <Widget>[
+          NewGameChooseOpponentTab(_pageController),
+          NewGameChooseMusicRepositoryTab(_pageController),
+          NewGameChooseMatchConfigs(_pageController),
+        ],
+      ),
     );
+//      }
+//    );
   }
 }

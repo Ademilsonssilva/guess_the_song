@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:guess_the_song/model/album.dart';
-import 'package:guess_the_song/model/game_mode_option.dart';
+import 'package:guess_the_song/model/repository.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -135,14 +135,14 @@ class _CreateMatchSelectionState extends State<CreateMatchSelection> {
 
     final response = await http.get(search);
 
-    List<GameModeOption> options = List<GameModeOption>();
+    List<Repository> options = List<Repository>();
 
     if (response.statusCode == 200) {
 
       List<dynamic> raw_result = json.decode(response.body)["data"];
 
       raw_result.asMap().forEach((key, value) {
-        GameModeOption option = GameModeOption.create(_selected_search_type_option, value);
+        Repository option = Repository.create(_selected_search_type_option, value);
         options.add(option);
       });
 

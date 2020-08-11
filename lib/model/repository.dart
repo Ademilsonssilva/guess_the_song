@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:guess_the_song/model/album.dart';
+import 'package:guess_the_song/model/track.dart';
 import 'artist.dart';
 import 'playlist.dart';
 
 import 'model.dart';
 
-class GameModeOption extends Model{
+class Repository extends Model{
 
-  GameModeOption();
+  Repository();
+
+  List<Track> tracklist;
+  int track_count;
 
   String type;
 
-  static GameModeOption create(String type, Map map) {
+  static Repository create(String type, Map map) {
     switch (type) {
       case 'album':
         return new Album.fromMap(map);
@@ -22,8 +26,16 @@ class GameModeOption extends Model{
       case 'playlist':
         return new Playlist.fromMap(map);
       default:
-        return new GameModeOption();
+        return new Repository();
     }
+  }
+
+  int getId(){
+    return 0;
+  }
+
+  String getTitle() {
+    return "";
   }
 
   AlertDialog getAlertDialogDetails(){

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:guess_the_song/model/game_mode_option.dart';
+import 'package:guess_the_song/model/repository.dart';
 
-class Artist extends GameModeOption{
+class Artist extends Repository{
 
   int _id;
   String _name;
@@ -22,46 +22,38 @@ class Artist extends GameModeOption{
     type = map['type'];
   }
 
+  int getId()
+  {
+    return _id;
+  }
+
   Widget getListTile(BuildContext context){
-    return GestureDetector(
-      child: Padding(
-        padding: EdgeInsets.all(10),
-        child: Card(
-          child: Row(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: Image.network(
-                  _picture_path,
-                  width: 80,
-                  height: 80,
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text("Artist: " + _name,
-                    style: TextStyle(
-                        fontSize: 16
-                    ),
-                  ),
-                  Text("Number of albuns: " + _nb_album.toString(),
-                    style: TextStyle(
-                        fontSize: 14
-                    ),
-                  ),
-                ],
-              )
-            ],
+    return Row(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.all(10),
+          child: Image.network(
+            _picture_path,
+            width: 80,
+            height: 80,
           ),
         ),
-      ),
-      onTap: () {
-        print(this.toString());
-      },
-      onLongPress: () {
-        this.showDetails(context);
-      },
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text("Artist: " + _name,
+              style: TextStyle(
+                  fontSize: 16
+              ),
+            ),
+            Text("Number of albuns: " + _nb_album.toString(),
+              style: TextStyle(
+                  fontSize: 14
+              ),
+            ),
+          ],
+        )
+      ],
     );
   }
 
