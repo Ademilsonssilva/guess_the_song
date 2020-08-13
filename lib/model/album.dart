@@ -42,25 +42,27 @@ class Album extends Repository {
             height: 80,
           ),
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text("Album: " + _title,
-              style: TextStyle(
-                  fontSize: 16
-              ),
-            ),
-            Text("Artist: " + _artist_name,
-              style: TextStyle(
-                  fontSize: 14
-              ),
-            ),
-            Text("Number of tracks: " + _nb_tracks.toString(),
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text("Album: " + _title,
                 style: TextStyle(
-                    fontSize: 12
-                )
-            )
-          ],
+                    fontSize: 16
+                ),
+              ),
+              Text("Artist: " + _artist_name,
+                style: TextStyle(
+                    fontSize: 14
+                ),
+              ),
+              Text("Number of tracks: " + _nb_tracks.toString(),
+                  style: TextStyle(
+                      fontSize: 12
+                  )
+              )
+            ],
+          ),
         )
       ],
     );

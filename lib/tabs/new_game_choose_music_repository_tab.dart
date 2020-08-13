@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:guess_the_song/model/repository.dart';
 import 'package:guess_the_song/tabs/new_game_choose_match_configs.dart';
+import 'package:guess_the_song/utils/deezer.dart';
 import 'package:guess_the_song/utils/session.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -142,7 +143,16 @@ class _NewGameChooseMusicRepositoryTabState extends State<NewGameChooseMusicRepo
                 Session.new_match.repository_type = _selected_search_type_option;
                 Session.new_match.repository = options[index];
 
-                widget.controller.jumpToPage(NewGameChooseMatchConfigs.tabNumber);
+                Deezer.getTrackList(Session.new_match.repository_type, Session.new_match.repository.getId().toString()).then((tracklist) {
+                  Session.new_match.repository.track_count = tracklist.length;
+
+                  Session.new_match.repository.tracklist = tracklist;
+
+                  Session.new_match.track_count = tracklist.length;
+
+                  widget.controller.jumpToPage(NewGameChooseMatchConfigs.tabNumber);
+
+                });
               }
               else {
                 setState(() {

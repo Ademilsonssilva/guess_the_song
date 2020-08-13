@@ -38,20 +38,23 @@ class Artist extends Repository{
             height: 80,
           ),
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text("Artist: " + _name,
-              style: TextStyle(
-                  fontSize: 16
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+
+            children: <Widget>[
+              Text("Artist: " + _name,
+                style: TextStyle(
+                    fontSize: 16
+                ),
               ),
-            ),
-            Text("Number of albuns: " + _nb_album.toString(),
-              style: TextStyle(
-                  fontSize: 14
+              Text("Number of albuns: " + _nb_album.toString(),
+                style: TextStyle(
+                    fontSize: 14
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         )
       ],
     );

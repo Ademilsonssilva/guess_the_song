@@ -13,17 +13,21 @@ class Repository extends Model{
   List<Track> tracklist;
   int track_count;
 
+  static const REPOSITORY_TYPE_ALBUM = "album";
+  static const REPOSITORY_TYPE_ARTIST = "artist";
+  static const REPOSITORY_TYPE_PLAYLIST = "playlist";
+
   String type;
 
   static Repository create(String type, Map map) {
     switch (type) {
-      case 'album':
+      case REPOSITORY_TYPE_ALBUM:
         return new Album.fromMap(map);
         break;
-      case 'artist':
+      case REPOSITORY_TYPE_ARTIST:
         return new Artist.fromMap(map);
         break;
-      case 'playlist':
+      case REPOSITORY_TYPE_PLAYLIST:
         return new Playlist.fromMap(map);
       default:
         return new Repository();

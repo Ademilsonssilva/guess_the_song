@@ -38,6 +38,34 @@ class _NewGameState extends State<NewGame> {
         backgroundColor: Theme.of(context).primaryColor,
         title: Text("Novo jogo"),
         centerTitle: true,
+        leading: PopupMenuButton(
+          child: Icon(
+            Icons.arrow_back
+          ),
+          onSelected: (value) {
+            if(value == "back") {
+              print(_pageController.previousPage(
+                duration: Duration(seconds: 1),
+                curve: Curves.ease
+              ));
+            }
+            else {
+              Navigator.pop(context);
+            }
+          },
+          itemBuilder: (context) {
+            return[
+              PopupMenuItem(
+                value: "back",
+                child: Text("Voltar à tela anterior"),
+              ),
+              PopupMenuItem(
+                value: "close",
+                child: Text("Cancelar criação de partida"),
+              )
+            ];
+          },
+        ),
       ),
       body: PageView(
         controller: _pageController,
