@@ -28,10 +28,12 @@ class _NewGameChooseMatchConfigsState extends State<NewGameChooseMatchConfigs> {
 
   int number_of_attempts = 1;
 
+  bool is_screen_loading = false;
+
   @override
   Widget build(BuildContext context) {
 
-    return SingleChildScrollView(
+    return is_screen_loading ? Center(child: CircularProgressIndicator(),) : SingleChildScrollView(
 
       child: Padding(
         padding: EdgeInsets.all(20),
@@ -140,18 +142,52 @@ class _NewGameChooseMatchConfigsState extends State<NewGameChooseMatchConfigs> {
                   padding: EdgeInsets.all(15),
                   child: Text("Criar partida",
                     style: TextStyle(
-                      color:Colors.white,
-                      fontSize: 18
+                        color:Colors.white,
+                        fontSize: 18
                     ),
                   ),
                 ),
-                onPressed: () {
+                onPressed: () async {
                   Session.new_match.game_songs_count = number_of_used_tracks;
                   Session.new_match.game_mode = game_mode;
                   Session.new_match.number_of_attempts = number_of_attempts;
                   Session.new_match.track_draw_type = track_draw_type;
 
-                  Session.new_match.createMatchFirebase();
+                  setState(() {
+                    is_screen_loading = true;
+                  });
+
+                  bool result = await Session.new_match.createMatchFirebase();
+                  setState(() {
+                    is_screen_loading = false;
+
+                    if (result) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text("Sucesso"),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Text("Partida criada com sucesso!\nAguarde o oponente!"),
+                                FlatButton(
+                                  child: Text("OK", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+                                  color: Theme.of(context).primaryColor,
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                )
+                              ],
+                            ),
+                          );
+                        }
+                      ).then((value) {
+                        Navigator.pop(context);
+                      });
+                    }
+                  });
+
                 },
               ),
             )

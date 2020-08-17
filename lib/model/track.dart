@@ -14,6 +14,18 @@ class Track {
     preview = map["preview"];
   }
 
+  Map<String, dynamic> toMap () {
+    Map <String, dynamic> map = Map<String, dynamic>();
+
+    map["id"] = id;
+    map["title"] = title;
+    map["title_short"] = title_short;
+    map["artist_id"] = artist_id;
+    map["preview"] = preview;
+
+    return map;
+  }
+
   @override
   String toString() {
     // TODO: implement toString

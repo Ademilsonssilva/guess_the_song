@@ -27,6 +27,21 @@ class Playlist extends Repository{
     type = map['type'];
   }
 
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = super.toMap();
+
+    map["id"] = _id;
+    map["title"] = _title;
+    map["link"] = _link;
+    map["public"] = _public;
+    map["tracklist"] = _tracklist;
+    map["nb_tracks"] = _nb_tracks;
+    map["user_id"] = _user_id;
+    map["user_name"] = _user_name;
+
+    return map;
+  }
+
   int getId()
   {
     return _id;

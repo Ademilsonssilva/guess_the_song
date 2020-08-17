@@ -22,6 +22,20 @@ class Artist extends Repository{
     type = map['type'];
   }
 
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = super.toMap();
+
+    map["id"] = _id;
+    map["name"] = _name;
+    map["link"] = _link;
+    map["picture_path"] = _picture_path;
+    map["nb_fans"] = _nb_fans;
+    map["nb_album"] = _nb_album;
+    map["tracklist_path"] = _tracklist_path;
+
+    return map;
+  }
+
   int getId()
   {
     return _id;

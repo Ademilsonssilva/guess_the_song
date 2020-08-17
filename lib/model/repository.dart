@@ -13,6 +13,8 @@ class Repository extends Model{
   List<Track> tracklist;
   int track_count;
 
+  String id;
+
   static const REPOSITORY_TYPE_ALBUM = "album";
   static const REPOSITORY_TYPE_ARTIST = "artist";
   static const REPOSITORY_TYPE_PLAYLIST = "playlist";
@@ -32,6 +34,20 @@ class Repository extends Model{
       default:
         return new Repository();
     }
+  }
+
+  Map<String, dynamic> toMap() {
+    Map <String, dynamic> map = Map<String, dynamic>();
+
+    map["type"] = type;
+    map["track_count"] = track_count;
+    map["tracklist"] = List<Map<String, dynamic>>();
+
+    tracklist.forEach((Track track) {
+      map["tracklist"].add(track.toMap());
+    });
+
+    return map;
   }
 
   int getId(){

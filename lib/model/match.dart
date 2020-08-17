@@ -40,7 +40,7 @@ class Match{
     map["hostPlayer"] = hostPlayer;
     map["visitorPlayer"] = visitorPlayer;
     map["repository_type"] = repository_type;
-//    map["repository"] = repository; // adicionar como um objeto
+//    map["repository"] = repository.toMap(); // adicionar como um objeto
     map["track_count"] = track_count;
     map["game_songs_count"] = game_songs_count;
     map["game_mode"] = game_mode;
@@ -50,10 +50,22 @@ class Match{
     return map;
   }
 
-  Future<void> createMatchFirebase() async {
+  Future<bool> createMatchFirebase() async {
     final match_path = Firestore.instance.collection("matches");
 
-    match_path.add(this.toMap());
+    try {
+      await match_path.add(this.toMap()).then((value) {
+        String id = value.documentID;
+
+        match_path.document(id).collection("repository").add(this.repository.toMap());
+
+      });
+
+      return Future.value(true);
+    }
+    catch(e) {
+      return Future.value(false);
+    }
 
 
   }
