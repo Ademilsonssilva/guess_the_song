@@ -3,7 +3,6 @@ import 'package:guess_the_song/model/repository.dart';
 
 class Artist extends Repository{
 
-  int _id;
   String _name;
   String _link;
   String _picture_path;
@@ -11,8 +10,7 @@ class Artist extends Repository{
   int _nb_album;
   String _tracklist_path;
 
-  Artist.fromMap(Map<String, dynamic> map) {
-    _id = map['id'];
+  Artist.fromMap(Map<String, dynamic> map) : super.fromMap(map) {
     _name = map['name'];
     _link = map['link'];
     _picture_path = map['picture'];
@@ -25,7 +23,6 @@ class Artist extends Repository{
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = super.toMap();
 
-    map["id"] = _id;
     map["name"] = _name;
     map["link"] = _link;
     map["picture_path"] = _picture_path;
@@ -34,11 +31,6 @@ class Artist extends Repository{
     map["tracklist_path"] = _tracklist_path;
 
     return map;
-  }
-
-  int getId()
-  {
-    return _id;
   }
 
   Widget getListTile(BuildContext context){
@@ -101,7 +93,7 @@ class Artist extends Repository{
 
   @override
   toString () {
-    return '${_id}: ${_name}';
+    return '${id}: ${_name}';
   }
 
 }

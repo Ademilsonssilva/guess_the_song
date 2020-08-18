@@ -170,6 +170,9 @@ class _NewGameChooseOpponentTabState extends State<NewGameChooseOpponentTab> {
                     ),
                     onPressed: () {
                       Session.new_match.visitorPlayer = selectedPlayer;
+                      Session.new_match.players = List<String>();
+                      Session.new_match.players.add(Session.new_match.visitorPlayer);
+                      Session.new_match.players.add(Session.new_match.hostPlayer);
                       widget.controller.jumpToPage(1);
                     },
                   ),

@@ -143,7 +143,7 @@ class _NewGameChooseMusicRepositoryTabState extends State<NewGameChooseMusicRepo
                 Session.new_match.repository_type = _selected_search_type_option;
                 Session.new_match.repository = options[index];
 
-                Deezer.getTrackList(Session.new_match.repository_type, Session.new_match.repository.getId().toString()).then((tracklist) {
+                Deezer.getTrackList(Session.new_match.repository_type, Session.new_match.repository.id.toString()).then((tracklist) {
                   Session.new_match.repository.track_count = tracklist.length;
 
                   Session.new_match.repository.tracklist = tracklist;
@@ -155,6 +155,7 @@ class _NewGameChooseMusicRepositoryTabState extends State<NewGameChooseMusicRepo
                 });
               }
               else {
+                print(options[index]);
                 setState(() {
                   selectedIndex = index;
                 });

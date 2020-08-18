@@ -13,13 +13,19 @@ class Repository extends Model{
   List<Track> tracklist;
   int track_count;
 
-  String id;
+  String firebaseID;
+  int id; // deezer_id
 
   static const REPOSITORY_TYPE_ALBUM = "album";
   static const REPOSITORY_TYPE_ARTIST = "artist";
   static const REPOSITORY_TYPE_PLAYLIST = "playlist";
 
   String type;
+
+  Repository.fromMap(Map<String, dynamic> map) {
+    id = map["id"];
+    track_count = map["track_count"];
+  }
 
   static Repository create(String type, Map map) {
     switch (type) {
@@ -39,6 +45,7 @@ class Repository extends Model{
   Map<String, dynamic> toMap() {
     Map <String, dynamic> map = Map<String, dynamic>();
 
+    map["id"] = id;
     map["type"] = type;
     map["track_count"] = track_count;
     map["tracklist"] = List<Map<String, dynamic>>();
@@ -48,10 +55,6 @@ class Repository extends Model{
     });
 
     return map;
-  }
-
-  int getId(){
-    return 0;
   }
 
   String getTitle() {

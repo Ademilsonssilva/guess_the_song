@@ -4,7 +4,6 @@ import 'repository.dart';
 
 class Album extends Repository {
 
-  int _id;
   String _title;
   String _link;
   String _cover_url;
@@ -13,8 +12,8 @@ class Album extends Repository {
   int _artist_id;
   String _artist_name;
 
-  Album.fromMap(Map<String, dynamic> map) {
-    _id = map['id'];
+  Album.fromMap(Map<String, dynamic> map) : super.fromMap(map) {
+
     _title = map['title'];
     _link = map['link'];
     _cover_url = map['cover'];
@@ -28,7 +27,6 @@ class Album extends Repository {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = super.toMap();
 
-    map["id"] = _id;
     map["title"] = _title;
     map["link"] = _link;
     map["cover_url"] = _cover_url;
@@ -38,11 +36,6 @@ class Album extends Repository {
     map["artist_name"] = _artist_name;
 
     return map;
-  }
-
-  int getId()
-  {
-    return _id;
   }
 
   Widget getListTile(BuildContext context){
@@ -111,7 +104,7 @@ class Album extends Repository {
 
   @override
   toString () {
-    return '${_id}: ${_title}';
+    return '${id}: ${_title} - ${track_count}';
   }
 
 }

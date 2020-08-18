@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:guess_the_song/model/album.dart';
+import 'package:guess_the_song/model/artist.dart';
 import 'package:guess_the_song/model/player.dart';
+import 'package:guess_the_song/model/playlist.dart';
 import 'package:guess_the_song/model/repository.dart';
 
 class Match{
 
-  List<Player> players;
+  List<String> players;
   String hostPlayer;
   String visitorPlayer;
 
@@ -46,6 +49,8 @@ class Match{
     map["game_mode"] = game_mode;
     map["number_of_attempts"] = number_of_attempts;
     map["track_draw_type"] = track_draw_type;
+
+    map["players"] = players;
 
     return map;
   }
