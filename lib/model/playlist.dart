@@ -14,6 +14,8 @@ class Playlist extends Repository{
 
 
   Playlist.fromMap(Map<String, dynamic> map) : super.fromMap(map) {
+
+    image = map['picture'];
     _title = map['title'];
     _public = map['public'];
     _nb_tracks = map['nb_tracks'];
@@ -37,6 +39,10 @@ class Playlist extends Repository{
     map["user_name"] = _user_name;
 
     return map;
+  }
+
+  String getTitle(){
+    return _title;
   }
 
   Widget getListTile(BuildContext context){

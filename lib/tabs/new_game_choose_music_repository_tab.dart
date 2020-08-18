@@ -203,6 +203,8 @@ class _NewGameChooseMusicRepositoryTabState extends State<NewGameChooseMusicRepo
       List<dynamic> raw_result = json.decode(response.body)["data"];
 
       raw_result.asMap().forEach((key, value) {
+
+//        print(value);
         Repository option = Repository.create(_selected_search_type_option, value);
         options.add(option);
       });

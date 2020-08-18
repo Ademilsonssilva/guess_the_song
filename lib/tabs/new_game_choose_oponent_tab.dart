@@ -168,7 +168,13 @@ class _NewGameChooseOpponentTabState extends State<NewGameChooseOpponentTab> {
                         ),
                       ),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
+
+                      if (selectedPlayer != 'open') {
+                        final selectedPlayerFirebaseData = await Firestore.instance.collection("players").document(selectedPlayer).get();
+                        Session.new_match.visitorPlayerName = selectedPlayerFirebaseData.data["name"];
+                      }
+
                       Session.new_match.visitorPlayer = selectedPlayer;
                       Session.new_match.players = List<String>();
                       Session.new_match.players.add(Session.new_match.visitorPlayer);

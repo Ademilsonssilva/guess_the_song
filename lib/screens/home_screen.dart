@@ -3,6 +3,7 @@ import 'package:guess_the_song/components/create_match_selection.dart';
 import 'package:guess_the_song/model/user.dart';
 import 'package:guess_the_song/screens/lobby_screen.dart';
 import 'package:guess_the_song/screens/login_screen.dart';
+import 'package:guess_the_song/utils/session.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -63,6 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   onPressed: model.isLoggedIn()
                     ? () {
+
+                      Session.firebaseUser = model.firebaseUser;
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => LobbyScreen()
                       ));

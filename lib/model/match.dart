@@ -10,6 +10,7 @@ class Match{
   List<String> players;
   String hostPlayer;
   String visitorPlayer;
+  String visitorPlayerName;
 
   String repository_type;
   Repository repository;
@@ -42,8 +43,9 @@ class Match{
 
     map["hostPlayer"] = hostPlayer;
     map["visitorPlayer"] = visitorPlayer;
+    map["visitorPlayerName"] = visitorPlayerName;
     map["repository_type"] = repository_type;
-//    map["repository"] = repository.toMap(); // adicionar como um objeto
+    map["repository"] = repository.toMap(); // adicionar como um objeto
     map["track_count"] = track_count;
     map["game_songs_count"] = game_songs_count;
     map["game_mode"] = game_mode;
@@ -59,12 +61,7 @@ class Match{
     final match_path = Firestore.instance.collection("matches");
 
     try {
-      await match_path.add(this.toMap()).then((value) {
-        String id = value.documentID;
-
-        match_path.document(id).collection("repository").add(this.repository.toMap());
-
-      });
+      await match_path.add(this.toMap());
 
       return Future.value(true);
     }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:guess_the_song/components/appbar.dart';
 import 'package:guess_the_song/model/player.dart';
 import 'package:guess_the_song/model/repository.dart';
+import 'package:guess_the_song/model/track.dart';
 import 'package:guess_the_song/model/user.dart';
 import 'package:guess_the_song/screens/new_game.dart';
 import 'package:guess_the_song/utils/session.dart';
@@ -60,29 +61,68 @@ class _LobbyScreenState extends State<LobbyScreen> {
                     arrayContains: Session.firebaseUser.uid
                   ).snapshots() , // Retorna todos os matches relacionados ao jogador
                   builder: (context, snapshot) {
-                    if(snapshot.hasData) {
+                    print(snapshot.connectionState);
 
-                      List<Card> cards = List<Card>();
+                    if(snapshot.connectionState == ConnectionState.active) {
 
-                      print(snapshot.data.documents.length);
+                      List<Widget> cards = List<Widget>();
 
                       for (int i = 0; i < snapshot.data.documents.length; i++) {
 
-                        Map<String, dynamic> repositoryData = snapshot.data.documents[i].data;
-                        repositoryData["id"] = snapshot.data.documents[i].documentID;
+                        if (snapshot.data.documents[i].data["visitorPlayer"] != "open") {
+                          Map<String, dynamic> matchData = snapshot.data.documents[i].data;
+                          final repository = Repository.fromMap(matchData["repository"]);
 
-//                        print(repositoryData);
+                          Widget card;
+                          if(snapshot.data.documents[i].data["hostPlayer"] == Session.firebaseUser.uid) {
+                             card = Padding(
+                               padding: EdgeInsets.all(10),
+                               child: Card(
+                                 elevation: 15,
+                                 child: Padding(
+                                   padding: EdgeInsets.all(10),
+                                   child: Column(
+                                     children: <Widget>[
+                                       Align(
+                                         alignment: Alignment.topLeft,
+                                         child: Text("Convidou: " + snapshot.data.documents[i]["visitorPlayerName"]),
+                                       ),
+                                       Divider(),
+                                       Row(
+                                         children: <Widget>[
+                                           CircleAvatar(
+                                             backgroundImage: NetworkImage(repository.image),
+                                             radius: 40,
+                                           ),
+                                           Expanded(
+                                             child: Padding(
+                                               padding: EdgeInsets.all(15),
+                                               child: Column(
+                                                 children: <Widget>[
+                                                   Align(
+                                                     alignment: Alignment.topLeft,
+                                                     child: Text(repository.type + repository.getTitle()) ,
+                                                   ),
+                                                 ],
+                                               ),
+                                             ),
+                                           )
+                                         ],
+                                       ),
 
-//                        Repository repository = Repository.instance(snapshot.data.documents[i].data);
+                                     ],
+                                   ),
+                                 )
+                               ),
+                             );
+                          }
+                          else {
 
-//                        print(repository);
+                          }
 
-                        Card card = Card(
-                          elevation: 15,
-                          child: Text(snapshot.data.documents[i]["visitorPlayer"]),
-                        );
+                          cards.add(card);
+                        }
 
-                        cards.add(card);
                       }
                       return ListView(
                         children: cards

@@ -14,6 +14,7 @@ class Album extends Repository {
 
   Album.fromMap(Map<String, dynamic> map) : super.fromMap(map) {
 
+    image = map['cover'];
     _title = map['title'];
     _link = map['link'];
     _cover_url = map['cover'];
@@ -22,6 +23,10 @@ class Album extends Repository {
     _artist_id = map['artist']['id'];
     _artist_name = map['artist']['name'];
     type = map['type'];
+  }
+
+  String getTitle(){
+    return _title;
   }
 
   Map<String, dynamic> toMap() {

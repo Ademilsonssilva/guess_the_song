@@ -6,11 +6,12 @@ class Track {
   int artist_id;
   String preview;
 
-  Track.fromMap(Map map) {
+  Track.fromMap(Map<String, dynamic> map) {
+
     id = map["id"];
     title = map["title"];
     title_short = map["title_short"];
-    artist_id = map["artist"]["id"];
+    artist_id = map["artist_id"] ?? map["artist"]["id"];
     preview = map["preview"];
   }
 

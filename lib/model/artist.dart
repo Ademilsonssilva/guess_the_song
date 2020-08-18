@@ -11,6 +11,8 @@ class Artist extends Repository{
   String _tracklist_path;
 
   Artist.fromMap(Map<String, dynamic> map) : super.fromMap(map) {
+
+    image = map['picture'];
     _name = map['name'];
     _link = map['link'];
     _picture_path = map['picture'];
@@ -31,6 +33,10 @@ class Artist extends Repository{
     map["tracklist_path"] = _tracklist_path;
 
     return map;
+  }
+
+  String getTitle() {
+    return _name;
   }
 
   Widget getListTile(BuildContext context){
