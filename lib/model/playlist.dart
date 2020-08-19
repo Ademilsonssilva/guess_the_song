@@ -15,15 +15,18 @@ class Playlist extends Repository{
 
   Playlist.fromMap(Map<String, dynamic> map) : super.fromMap(map) {
 
-    image = map['picture'];
+    if (image == null) {
+      image = map['picture'];
+    }
+
     _title = map['title'];
     _public = map['public'];
     _nb_tracks = map['nb_tracks'];
     _link = map['link'];
     _picture_path = map['picture'];
     _tracklist = map['tracklist'];
-    _user_id = map['user']['id'];
-    _user_name = map['user']['name'];
+    _user_id = map["user_id"] ?? map['user']['id'];
+    _user_name = map["user_name"] ?? map['user']['name'];
     type = map['type'];
   }
 

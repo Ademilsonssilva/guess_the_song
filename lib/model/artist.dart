@@ -8,17 +8,18 @@ class Artist extends Repository{
   String _picture_path;
   int _nb_fans;
   int _nb_album;
-  String _tracklist_path;
 
   Artist.fromMap(Map<String, dynamic> map) : super.fromMap(map) {
 
-    image = map['picture'];
+    if(image == null) {
+      image = map['picture'];
+    }
+
     _name = map['name'];
     _link = map['link'];
     _picture_path = map['picture'];
     _nb_fans = map['nb_fans'];
     _nb_album = map['nb_album'];
-    _tracklist_path = map['tracklist'];
     type = map['type'];
   }
 
@@ -30,7 +31,6 @@ class Artist extends Repository{
     map["picture_path"] = _picture_path;
     map["nb_fans"] = _nb_fans;
     map["nb_album"] = _nb_album;
-    map["tracklist_path"] = _tracklist_path;
 
     return map;
   }

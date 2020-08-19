@@ -13,15 +13,17 @@ class Album extends Repository {
   String _artist_name;
 
   Album.fromMap(Map<String, dynamic> map) : super.fromMap(map) {
+    if (image == null) {
+      image = map['cover'];
+    }
 
-    image = map['cover'];
     _title = map['title'];
     _link = map['link'];
     _cover_url = map['cover'];
     _genre_id = map['genre_id'];
     _nb_tracks = map['nb_tracks'];
-    _artist_id = map['artist']['id'];
-    _artist_name = map['artist']['name'];
+    _artist_id = map["artist_id"] ?? map['artist']['id'];
+    _artist_name = map["artist_name"] ?? map['artist']['name'];
     type = map['type'];
   }
 

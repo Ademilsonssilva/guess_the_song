@@ -32,6 +32,9 @@ class _NewGameState extends State<NewGame> {
     Session.new_match = new_match;
 
     Session.new_match.hostPlayer = widget.player.id;
+    Session.new_match.hostPlayerName = widget.player.name;
+    Session.new_match.invite = true;
+    Session.new_match.status = Match.STATUS_INVITE_OPEN;
 
     return Scaffold(
       appBar: AppBar(

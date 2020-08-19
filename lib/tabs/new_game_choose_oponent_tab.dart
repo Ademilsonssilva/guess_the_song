@@ -32,8 +32,6 @@ class _NewGameChooseOpponentTabState extends State<NewGameChooseOpponentTab> {
     return ScopedModelDescendant<User>(
       builder: (context, child, model){
 
-//        print(widget.new_match);
-
         return ListView(
             children: [
               Padding(

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:guess_the_song/components/appbar.dart';
+import 'package:guess_the_song/model/match.dart';
 import 'package:guess_the_song/model/player.dart';
 import 'package:guess_the_song/model/repository.dart';
 import 'package:guess_the_song/model/track.dart';
@@ -70,14 +71,16 @@ class _LobbyScreenState extends State<LobbyScreen> {
                       for (int i = 0; i < snapshot.data.documents.length; i++) {
 
                         if (snapshot.data.documents[i].data["visitorPlayer"] != "open") {
-                          Map<String, dynamic> matchData = snapshot.data.documents[i].data;
-                          final repository = Repository.fromMap(matchData["repository"]);
+
+                          Match match = Match.fromMap(snapshot.data.documents[i].data);
+                          match.firebaseID = snapshot.data.documents[i].documentID;
 
                           Widget card;
                           if(snapshot.data.documents[i].data["hostPlayer"] == Session.firebaseUser.uid) {
                              card = Padding(
                                padding: EdgeInsets.all(10),
                                child: Card(
+
                                  elevation: 15,
                                  child: Padding(
                                    padding: EdgeInsets.all(10),
@@ -85,14 +88,15 @@ class _LobbyScreenState extends State<LobbyScreen> {
                                      children: <Widget>[
                                        Align(
                                          alignment: Alignment.topLeft,
-                                         child: Text("Convidou: " + snapshot.data.documents[i]["visitorPlayerName"]),
+                                         child: Text("Você desafiou " + snapshot.data.documents[i]["visitorPlayerName"]),
                                        ),
                                        Divider(),
                                        Row(
                                          children: <Widget>[
-                                           CircleAvatar(
-                                             backgroundImage: NetworkImage(repository.image),
-                                             radius: 40,
+                                           Image.network(
+                                             match.repository.image,
+                                             width: 80,
+                                             height: 80,
                                            ),
                                            Expanded(
                                              child: Padding(
@@ -101,7 +105,27 @@ class _LobbyScreenState extends State<LobbyScreen> {
                                                  children: <Widget>[
                                                    Align(
                                                      alignment: Alignment.topLeft,
-                                                     child: Text(repository.type + repository.getTitle()) ,
+                                                     child: Text(match.repository.type + ' ' + match.repository.getTitle()) ,
+                                                   ),
+                                                   Align(
+                                                     alignment: Alignment.topLeft,
+                                                     child: Text("Quantidade de músicas: " + match.game_songs_count.toString()) ,
+                                                   ),
+                                                   Align(
+                                                     alignment: Alignment.bottomRight,
+                                                     child: FlatButton(
+                                                       onPressed: () {
+                                                         match.deleteFromFirebase();
+                                                       },
+                                                       color: Colors.red,
+                                                       child: Text(
+                                                         "Cancelar desafio",
+                                                         style: TextStyle(
+                                                           color: Colors.white,
+                                                           fontSize: 10
+                                                         ),
+                                                       ),
+                                                     ),
                                                    ),
                                                  ],
                                                ),
@@ -117,7 +141,80 @@ class _LobbyScreenState extends State<LobbyScreen> {
                              );
                           }
                           else {
+                            card = Padding(
+                              padding: EdgeInsets.all(10),
+                              child: GestureDetector(
+                                onLongPress: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        content: Text("oi"),
+                                      );
+                                    }
+                                  );
+                                },
+                                child: Card(
 
+                                    elevation: 15,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: Column(
+                                        children: <Widget>[
+                                          Align(
+                                            alignment: Alignment.topRight,
+                                            child: Text(snapshot.data.documents[i]["hostPlayerName"] + " desafiou você"),
+                                          ),
+                                          Divider(),
+                                          Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(15),
+                                                  child: Column(
+                                                    children: <Widget>[
+                                                      Align(
+                                                        alignment: Alignment.topRight,
+                                                        child: Text(match.repository.type + ' ' + match.repository.getTitle()) ,
+                                                      ),
+                                                      Align(
+                                                        alignment: Alignment.topRight,
+                                                        child: Text("Quantidade de músicas: " + match.game_songs_count.toString()) ,
+                                                      ),
+                                                      Align(
+                                                        alignment: Alignment.bottomLeft,
+                                                        child: FlatButton(
+                                                          onPressed: () {
+//                                                          match.deleteFromFirebase();
+                                                          },
+                                                          color: Colors.green,
+                                                          child: Text(
+                                                            "Aceitar desafio",
+                                                            style: TextStyle(
+                                                                color: Colors.white,
+                                                                fontSize: 10
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Image.network(
+                                                match.repository.image,
+                                                width: 80,
+                                                height: 80,
+                                              ),
+                                            ],
+                                          ),
+
+                                        ],
+                                      ),
+                                    )
+                                ),
+                              ),
+                            );
                           }
 
                           cards.add(card);
