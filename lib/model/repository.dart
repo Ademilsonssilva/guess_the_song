@@ -13,6 +13,7 @@ class Repository extends Model{
   List<Track> tracklist;
   int track_count;
   String image;
+  String image_big;
 
   String firebaseID;
   int id; // deezer_id
@@ -69,6 +70,7 @@ class Repository extends Model{
     map["track_count"] = track_count;
     map["tracklist"] = List<Map<String, dynamic>>();
     map["image"] = image;
+    map["image_big"] = image_big;
 
     tracklist.forEach((Track track) {
       map["tracklist"].add(track.toMap());

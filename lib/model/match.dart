@@ -20,24 +20,53 @@ class Match{
   String repository_type;
   Repository repository;
 
-  int track_count;
+  int track_count; // quantidade de musicas no repositorio
 
-  int game_songs_count;
-  String game_mode;
+  int game_songs_count; // quantidade de musicas que serão usadas na partida
+  String game_mode; // modo de jogo (adivinhar só musica ou musica e artista)
 
-  int number_of_attempts;
-  String track_draw_type;
+  int number_of_attempts; // numero de pausas na musica
+  String track_draw_type; // Forma de sorteio das musicas
 
   String firebaseID;
 
   static const STATUS_INVITE_OPEN = "invite_open";
 
+  static const STATUS_DETAILS = {
+    STATUS_INVITE_OPEN: {
+      "description": "Convite aguardando resposta",
+    }
+  };
+
+//  static const STATUS_INVITE_REJECTED = "invite_rejected";
+
   static const GAME_MODE_ONLY_SONG = "only_song";
   static const GAME_MODE_SONG_AND_ARTIST = "song_and_artist";
+
+  static const GAME_MODE_DETAILS = {
+    GAME_MODE_ONLY_SONG: {
+      "description": "Adivinhar a música",
+    },
+    GAME_MODE_SONG_AND_ARTIST: {
+      "description": "Adivinhar música e artista"
+    }
+  };
 
   static const TRACK_DRAW_TYPE_SAME_DRAW = "same_draw"; // O jogo dos dois jogadores será exatamente igual
   static const TRACK_DRAW_TYPE_DIFF_SORT = "diff_sort"; // As mesmas musicas serao mostradas para os dois jogadores, mas não necessariamente na mesma ordem
   static const TRACK_DRAW_TYPE_DIFF_GAME = "diff_game"; // Cada player receberá musicas diferentes, de dentro do mesmo repositório
+
+  static const TRACK_DRAW_DETAILS = {
+    TRACK_DRAW_TYPE_SAME_DRAW: {
+      "description": 'Músicas e ordem iguais',
+    },
+    TRACK_DRAW_TYPE_DIFF_SORT: {
+      "description": 'Músicas iguais, ordem diferente',
+    },
+    TRACK_DRAW_TYPE_DIFF_GAME: {
+      "description": 'Músicas diferentes',
+    },
+  };
 
   Match();
 

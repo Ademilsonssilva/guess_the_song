@@ -155,7 +155,8 @@ class _NewGameChooseMusicRepositoryTabState extends State<NewGameChooseMusicRepo
                 });
               }
               else {
-                print(options[index]);
+//                print(options[index]);
+//                print(options[index].image_big);
                 setState(() {
                   selectedIndex = index;
                 });

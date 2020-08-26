@@ -19,6 +19,8 @@ class Playlist extends Repository{
       image = map['picture'];
     }
 
+    image_big = map["image_big"] ?? map["picture_big"];
+
     _title = map['title'];
     _public = map['public'];
     _nb_tracks = map['nb_tracks'];

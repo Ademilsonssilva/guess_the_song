@@ -14,7 +14,7 @@ class Artist extends Repository{
     if(image == null) {
       image = map['picture'];
     }
-
+    image_big = map["image_big"] ?? map["picture_big"];
     _name = map['name'];
     _link = map['link'];
     _picture_path = map['picture'];
@@ -57,7 +57,7 @@ class Artist extends Repository{
             children: <Widget>[
               Text("Artist: " + _name,
                 style: TextStyle(
-                    fontSize: 16
+                  fontSize: 16
                 ),
               ),
               Text("Number of albuns: " + _nb_album.toString(),

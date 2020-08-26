@@ -16,7 +16,7 @@ class Album extends Repository {
     if (image == null) {
       image = map['cover'];
     }
-
+    image_big = map["image_big"] ?? map["cover_big"];
     _title = map['title'];
     _link = map['link'];
     _cover_url = map['cover'];
