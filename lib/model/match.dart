@@ -31,14 +31,18 @@ class Match{
   String firebaseID;
 
   static const STATUS_INVITE_OPEN = "invite_open";
+  static const STATUS_INVITE_REJECTED = "invite_rejected";
 
   static const STATUS_DETAILS = {
     STATUS_INVITE_OPEN: {
       "description": "Convite aguardando resposta",
+    },
+    STATUS_INVITE_REJECTED: {
+      "description": "Convite recusado",
     }
   };
 
-//  static const STATUS_INVITE_REJECTED = "invite_rejected";
+
 
   static const GAME_MODE_ONLY_SONG = "only_song";
   static const GAME_MODE_SONG_AND_ARTIST = "song_and_artist";
@@ -126,6 +130,15 @@ class Match{
       return Future.value(false);
     }
 
+  }
+  
+  Future<bool> updateMatchFirebase(Match match) async {
+    try {
+      await Firestore.instance.collection("matches").document(match.firebaseID).updateData(match.toMap());
+    }
+    catch(e) {
+      return Future.value(false);
+    }
   }
 
   Future<bool> deleteFromFirebase () async {

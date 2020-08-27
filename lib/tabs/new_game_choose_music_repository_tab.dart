@@ -1,3 +1,4 @@
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:guess_the_song/model/repository.dart';
 import 'package:guess_the_song/tabs/new_game_choose_match_configs.dart';
@@ -7,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 class NewGameChooseMusicRepositoryTab extends StatefulWidget {
 
@@ -35,6 +37,9 @@ class _NewGameChooseMusicRepositoryTabState extends State<NewGameChooseMusicRepo
   int selectedIndex;
 
   TextEditingController _search_controller = TextEditingController();
+
+  SpeechToText speech = SpeechToText();
+  bool isListening = false;
 
   @override
   Widget build(BuildContext context) {
@@ -82,16 +87,17 @@ class _NewGameChooseMusicRepositoryTabState extends State<NewGameChooseMusicRepo
                       child: getSearchTypeOptionsCombobox(),
                     ),
                     labelText: Text("Select artist, album or playlist").data,
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        Icons.send,
+                    suffixIcon: AvatarGlow(
+                      animate: isListening,
+                      glowColor: Theme.of(context).primaryColor,
+                      endRadius: 30,
+                      duration: Duration(milliseconds: 2000),
+                      repeat: true,
+                      repeatPauseDuration: Duration(milliseconds: 100),
+                      child: IconButton(
+                        onPressed: _listen,
+                        icon: Icon(!isListening ? Icons.mic : Icons.mic_none, size: 30,),
                       ),
-                      onPressed: () {
-                        setState(() {
-                          search();
-                        });
-                        //print("hello bitches");
-                      },
                     )
                 ),
               ),
@@ -166,6 +172,37 @@ class _NewGameChooseMusicRepositoryTabState extends State<NewGameChooseMusicRepo
 
         }
     );
+  }
+
+  void _listen () async {
+
+//    print('entrou na function listen');
+    if(!isListening) {
+      bool available = await speech.initialize(
+        onStatus: (val) => print("onStatus: $val"),
+        onError: (val) => print("onError: $val"),
+      );
+
+      if (available) {
+        setState(() {
+          isListening = true;
+          speech.listen(
+            onResult: (val) {
+              setState(() {
+                _search_controller.text = val.recognizedWords;
+                isListening = false;
+              });
+            }
+          );
+        });
+      }
+    }
+    else {
+      setState(() {
+        isListening = false;
+        speech.stop();
+      });
+    }
   }
 
   Widget getSearchTypeOptionsCombobox()

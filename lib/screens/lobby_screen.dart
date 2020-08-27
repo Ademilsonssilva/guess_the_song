@@ -71,155 +71,164 @@ class _LobbyScreenState extends State<LobbyScreen> {
 
                       for (int i = 0; i < snapshot.data.documents.length; i++) {
 
-                        if (snapshot.data.documents[i].data["visitorPlayer"] != "open") {
+//                        if (snapshot.data.documents[i].data["visitorPlayer"] != "open") {
 
-                          Match match = Match.fromMap(snapshot.data.documents[i].data);
-                          match.firebaseID = snapshot.data.documents[i].documentID;
+                        Match match = Match.fromMap(snapshot.data.documents[i].data);
+                        match.firebaseID = snapshot.data.documents[i].documentID;
 
-                          Widget card;
-                          if(snapshot.data.documents[i].data["hostPlayer"] == Session.firebaseUser.uid) {
-                             card = Padding(
-                               padding: EdgeInsets.all(10),
-                               child: GestureDetector(
-                                 onLongPress: () {
-                                   showDialog(
-                                       context: context,
-                                       builder: (context) {
-                                         return AlertDialog(
-                                           content: Row(
-                                               children: [
-                                                 Expanded(
-                                                   child: Padding(
-                                                     padding: EdgeInsets.all(4),
-                                                     child: FlatButton(
-                                                       onPressed: () {
-                                                         Navigator.pop(context);
-                                                         Navigator.push(context, MaterialPageRoute(
-                                                             builder: (context) => MatchDetails(match)
-                                                         ));
-                                                       },
-                                                       child: Text('Detalhes',
-                                                         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
-                                                       ),
-                                                       color: Theme.of(context).primaryColor,
-                                                     ),
-                                                   ),
-                                                 ),
-                                               ]
-                                           ),
-                                         );
-                                       }
-                                   );
-                                 },
-                                 child: Card(
+                        String visitorPlayerString = match.visitorPlayer == "open" ? "Sala aberta" : "Você desafiou " + match.visitorPlayerName;
+                        String buttonString = match.status == Match.STATUS_INVITE_REJECTED ? "Convite recusado\nExcluir convite" : 'Cancelar desafio';
 
-                                     elevation: 15,
-                                     child: Padding(
-                                       padding: EdgeInsets.all(10),
-                                       child: Column(
-                                         children: <Widget>[
-                                           Align(
-                                             alignment: Alignment.topLeft,
-                                             child: Text("Você desafiou " + snapshot.data.documents[i]["visitorPlayerName"]),
-                                           ),
-                                           Divider(),
-                                           Row(
-                                             children: <Widget>[
-                                               Image.network(
-                                                 match.repository.image,
-                                                 width: 80,
-                                                 height: 80,
-                                               ),
+                        Widget card;
+                        if(snapshot.data.documents[i].data["hostPlayer"] == Session.firebaseUser.uid) { //Convites que o jogador criou
+                           card = Padding(
+                             padding: EdgeInsets.all(10),
+                             child: GestureDetector(
+                               onLongPress: () {
+                                 showDialog(
+                                     context: context,
+                                     builder: (context) {
+                                       return AlertDialog(
+                                         content: Row(
+                                             children: [
                                                Expanded(
                                                  child: Padding(
-                                                   padding: EdgeInsets.all(15),
-                                                   child: Column(
-                                                     children: <Widget>[
-                                                       Align(
-                                                         alignment: Alignment.topLeft,
-                                                         child: Text(match.repository.type + ' ' + match.repository.getTitle()) ,
-                                                       ),
-                                                       Align(
-                                                         alignment: Alignment.topLeft,
-                                                         child: Text("Quantidade de músicas: " + match.game_songs_count.toString()) ,
-                                                       ),
-                                                       Align(
-                                                         alignment: Alignment.bottomRight,
-                                                         child: FlatButton(
-                                                           onPressed: () {
-                                                             match.deleteFromFirebase();
-                                                           },
-                                                           color: Colors.red,
-                                                           child: Text(
-                                                             "Cancelar desafio",
-                                                             style: TextStyle(
-                                                                 color: Colors.white,
-                                                                 fontSize: 10
-                                                             ),
+                                                   padding: EdgeInsets.all(4),
+                                                   child: FlatButton(
+                                                     onPressed: () {
+                                                       Navigator.pop(context);
+                                                       Navigator.push(context, MaterialPageRoute(
+                                                           builder: (context) => MatchDetails(match)
+                                                       ));
+                                                     },
+                                                     child: Text('Detalhes',
+                                                       style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                                                     ),
+                                                     color: Theme.of(context).primaryColor,
+                                                   ),
+                                                 ),
+                                               ),
+                                             ]
+                                         ),
+                                       );
+                                     }
+                                 );
+                               },
+                               child: Card(
+
+                                   elevation: 15,
+                                   child: Padding(
+                                     padding: EdgeInsets.all(10),
+                                     child: Column(
+                                       children: <Widget>[
+                                         Align(
+                                           alignment: Alignment.topLeft,
+                                           child: Text(visitorPlayerString),
+                                         ),
+                                         Divider(),
+                                         Row(
+                                           children: <Widget>[
+                                             Image.network(
+                                               match.repository.image,
+                                               width: 80,
+                                               height: 80,
+                                             ),
+                                             Expanded(
+                                               child: Padding(
+                                                 padding: EdgeInsets.all(15),
+                                                 child: Column(
+                                                   children: <Widget>[
+                                                     Align(
+                                                       alignment: Alignment.topLeft,
+                                                       child: Text(match.repository.type + ' ' + match.repository.getTitle()) ,
+                                                     ),
+                                                     Align(
+                                                       alignment: Alignment.topLeft,
+                                                       child: Text("Quantidade de músicas: " + match.game_songs_count.toString()) ,
+                                                     ),
+                                                     Align(
+                                                       alignment: Alignment.bottomRight,
+                                                       child: FlatButton(
+                                                         onPressed: () {
+                                                           match.deleteFromFirebase();
+                                                         },
+                                                         color: Colors.red,
+                                                         child: Text(
+                                                           buttonString,
+                                                           style: TextStyle(
+                                                               color: Colors.white,
+                                                               fontSize: 10
                                                            ),
                                                          ),
                                                        ),
-                                                     ],
-                                                   ),
+                                                     ),
+                                                   ],
                                                  ),
-                                               )
-                                             ],
-                                           ),
+                                               ),
+                                             )
+                                           ],
+                                         ),
 
-                                         ],
-                                       ),
-                                     )
-                                 ),
+                                       ],
+                                     ),
+                                   )
                                ),
-                             );
-                          }
-                          else {
+                             ),
+                           );
+
+                           cards.add(card);
+                        }
+                        else { // Convites que o jogador recebeu
+                          if(match.status != Match.STATUS_INVITE_REJECTED) {
                             card = Padding(
                               padding: EdgeInsets.all(10),
                               child: GestureDetector(
                                 onLongPress: () {
                                   showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        content: Row(
-                                          children: [
-                                            Expanded(
-                                              child: Padding(
-                                                padding: EdgeInsets.all(4),
-                                                child: FlatButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                    Navigator.push(context, MaterialPageRoute(
-                                                      builder: (context) => MatchDetails(match)
-                                                    ));
-                                                  },
-                                                  child: Text('Detalhes',
-                                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          content: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding: EdgeInsets.all(4),
+                                                    child: FlatButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                        Navigator.push(context, MaterialPageRoute(
+                                                            builder: (context) => MatchDetails(match)
+                                                        ));
+                                                      },
+                                                      child: Text('Detalhes',
+                                                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                                                      ),
+                                                      color: Theme.of(context).primaryColor,
+                                                    ),
                                                   ),
-                                                  color: Theme.of(context).primaryColor,
                                                 ),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Padding(
-                                                padding: EdgeInsets.all(4),
-                                                child: FlatButton(
-                                                  onPressed: () {
-                                                    match.deleteFromFirebase();
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: Text('Recusar',
-                                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding: EdgeInsets.all(4),
+                                                    child: FlatButton(
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          match.status = Match.STATUS_INVITE_REJECTED;
+                                                        });
+                                                        match.updateMatchFirebase(match);
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: Text('Recusar',
+                                                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                                                      ),
+                                                      color: Colors.red,
+                                                    ),
                                                   ),
-                                                  color: Colors.red,
-                                                ),
-                                              ),
-                                            )
-                                          ]
-                                        ),
-                                      );
-                                    }
+                                                )
+                                              ]
+                                          ),
+                                        );
+                                      }
                                   );
                                 },
                                 child: Card(
@@ -283,10 +292,13 @@ class _LobbyScreenState extends State<LobbyScreen> {
                                 ),
                               ),
                             );
-                          }
 
-                          cards.add(card);
+                            cards.add(card);
+                          }
                         }
+
+//                          cards.add(card);
+//                        }
 
                       }
                       return ListView(
@@ -317,6 +329,8 @@ class _LobbyScreenState extends State<LobbyScreen> {
                         match.firebaseID = snapshot.data.documents[i].documentID;
 
                         if(snapshot.data.documents[i].data["hostPlayer"] != Session.firebaseUser.uid) {
+
+//                          String buttonText = match.status == Match.STATUS_INVITE_REJECTED ? "Desafio recusado.\nExcluir convite" : "Cancelar desafio";
 
                           Widget card = Padding(
                             padding: EdgeInsets.all(10),

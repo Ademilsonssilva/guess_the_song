@@ -13,6 +13,9 @@ class MatchDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    String textoCancelarDesafio = match.status == Match.STATUS_INVITE_REJECTED ? "Desafio rejeitado\nExcluir convite" : 'Cancelar desafio';
+
     return Scaffold(
 //      appBar: ,
       body: CustomScrollView(
@@ -54,7 +57,7 @@ class MatchDetails extends StatelessWidget {
                 Column(
                   children: <Widget>[
 
-                    Session.firebaseUser.uid == match.hostPlayer ? Padding(
+                    Session.firebaseUser.uid == match.hostPlayer ? Padding( //Jogador é o criador. Nesse caso só pode cancelar
                       padding: EdgeInsets.all(10),
                       child: Row(
                         children: <Widget>[
@@ -68,7 +71,7 @@ class MatchDetails extends StatelessWidget {
                                   Navigator.pop(context);
                                 },
                                 child: Text(
-                                  "Cancelar desafio",
+                                  textoCancelarDesafio,
                                   style: TextStyle(
                                       color: Colors.white
                                   ),
@@ -80,7 +83,7 @@ class MatchDetails extends StatelessWidget {
                       ),
                     )
                     :
-                    Padding(
+                    Padding( // jogador é o desafiado. pode cancelar ou aceitar
                       padding: EdgeInsets.all(10),
                       child: Row(
                         children: <Widget>[
@@ -104,11 +107,12 @@ class MatchDetails extends StatelessWidget {
                             child: FlatButton(
                               color: Colors.red,
                               onPressed: () {
-                                match.deleteFromFirebase();
+                                match.status = Match.STATUS_INVITE_REJECTED;
+                                match.updateMatchFirebase(match);
                                 Navigator.pop(context);
                               },
                               child: Text(
-                                "Cancelar desafio",
+                                "Recusar desafio",
                                 style: TextStyle(
                                     color: Colors.white
                                 ),
