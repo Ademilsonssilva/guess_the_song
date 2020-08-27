@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:guess_the_song/components/create_match_selection.dart';
+import 'package:guess_the_song/model/player.dart';
 import 'package:guess_the_song/model/user.dart';
 import 'package:guess_the_song/screens/lobby_screen.dart';
 import 'package:guess_the_song/screens/login_screen.dart';
@@ -63,9 +65,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   onPressed: model.isLoggedIn()
-                    ? () {
+                    ? () async {
 
                       Session.firebaseUser = model.firebaseUser;
+
+                      DocumentSnapshot doc = await Firestore.instance.collection("players").document(Session.firebaseUser.uid).get();
+                      Player player = Player.fromMap(doc.data);
+                      player.id = doc.documentID;
+
+                      Session.player = player;
+
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => LobbyScreen()
                       ));

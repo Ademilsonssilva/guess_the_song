@@ -1,9 +1,14 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:guess_the_song/model/album.dart';
 import 'package:guess_the_song/model/artist.dart';
+import 'package:guess_the_song/model/game.dart';
+import 'package:guess_the_song/model/match_item.dart';
 import 'package:guess_the_song/model/player.dart';
 import 'package:guess_the_song/model/playlist.dart';
 import 'package:guess_the_song/model/repository.dart';
+import 'package:guess_the_song/model/track.dart';
 import 'package:guess_the_song/utils/firebase.dart';
 
 class Match{
@@ -13,6 +18,8 @@ class Match{
   String hostPlayerName;
   String visitorPlayer;
   String visitorPlayerName;
+
+  Game game = Game();
 
   bool invite;
   String status;
@@ -32,6 +39,7 @@ class Match{
 
   static const STATUS_INVITE_OPEN = "invite_open";
   static const STATUS_INVITE_REJECTED = "invite_rejected";
+  static const STATUS_MATCH_ACTIVE = "match_active";
 
   static const STATUS_DETAILS = {
     STATUS_INVITE_OPEN: {
@@ -39,6 +47,9 @@ class Match{
     },
     STATUS_INVITE_REJECTED: {
       "description": "Convite recusado",
+    },
+    STATUS_MATCH_ACTIVE: {
+      "description": "Partida em andamento",
     }
   };
 
@@ -117,7 +128,68 @@ class Match{
 
     map["players"] = players;
 
+    if(game != null) {
+      map["game"] = game.toMap();
+    }
+
     return map;
+  }
+
+  Future<bool> acceptMatchFirebase() async
+  {
+    this.status = STATUS_MATCH_ACTIVE;
+
+    List<MatchItem> p1List = generateRandomTrackList();
+    List<MatchItem> p2List;
+
+    if(track_draw_type == TRACK_DRAW_TYPE_SAME_DRAW) {
+      p2List = []..addAll(p1List);
+    }
+    else if (track_draw_type == TRACK_DRAW_TYPE_DIFF_SORT) {
+      p2List = []..addAll(p1List);
+      p2List.shuffle();
+    }
+    else if (track_draw_type == TRACK_DRAW_TYPE_DIFF_GAME) {
+      p2List = generateRandomTrackList();
+    }
+
+    game.player_game[hostPlayer] = p1List;
+    game.player_game[visitorPlayer] = p2List;
+
+    this.invite = false;
+
+    await Firestore.instance.collection("matches").document(firebaseID).updateData(toMap());
+
+  }
+
+  List<MatchItem> generateRandomTrackList()
+  {
+
+    Random rdn = Random();
+
+    List<int> usedIndexes = List<int>();
+
+    List<MatchItem> list = List<MatchItem>();
+
+    for(int i = 0; i < game_songs_count; i++) {
+
+      int index = rdn.nextInt(track_count);
+//      print(index);
+      if (!usedIndexes.contains(index)) {
+        Track selectedTrack = repository.tracklist[index];
+        MatchItem item = MatchItem.create(selectedTrack.title);
+//        print ("index $index adicionado");
+        usedIndexes.add(index);
+//        print(usedIndexes);
+        list.add(item);
+      }
+      else {
+        i--;
+      }
+
+    }
+
+    return list;
   }
 
   Future<bool> createMatchFirebase() async {

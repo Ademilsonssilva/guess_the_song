@@ -79,226 +79,91 @@ class _LobbyScreenState extends State<LobbyScreen> {
                         String visitorPlayerString = match.visitorPlayer == "open" ? "Sala aberta" : "Você desafiou " + match.visitorPlayerName;
                         String buttonString = match.status == Match.STATUS_INVITE_REJECTED ? "Convite recusado\nExcluir convite" : 'Cancelar desafio';
 
+                        Color buttonColor;
+                        Function buttonAction;
+
                         Widget card;
                         if(snapshot.data.documents[i].data["hostPlayer"] == Session.firebaseUser.uid) { //Convites que o jogador criou
-                           card = Padding(
-                             padding: EdgeInsets.all(10),
-                             child: GestureDetector(
-                               onLongPress: () {
-                                 showDialog(
-                                     context: context,
-                                     builder: (context) {
-                                       return AlertDialog(
-                                         content: Row(
-                                             children: [
-                                               Expanded(
-                                                 child: Padding(
-                                                   padding: EdgeInsets.all(4),
-                                                   child: FlatButton(
-                                                     onPressed: () {
-                                                       Navigator.pop(context);
-                                                       Navigator.push(context, MaterialPageRoute(
-                                                           builder: (context) => MatchDetails(match)
-                                                       ));
-                                                     },
-                                                     child: Text('Detalhes',
-                                                       style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
-                                                     ),
-                                                     color: Theme.of(context).primaryColor,
-                                                   ),
-                                                 ),
-                                               ),
-                                             ]
-                                         ),
-                                       );
-                                     }
-                                 );
-                               },
-                               child: Card(
 
-                                   elevation: 15,
-                                   child: Padding(
-                                     padding: EdgeInsets.all(10),
-                                     child: Column(
-                                       children: <Widget>[
-                                         Align(
-                                           alignment: Alignment.topLeft,
-                                           child: Text(visitorPlayerString),
-                                         ),
-                                         Divider(),
-                                         Row(
-                                           children: <Widget>[
-                                             Image.network(
-                                               match.repository.image,
-                                               width: 80,
-                                               height: 80,
-                                             ),
-                                             Expanded(
-                                               child: Padding(
-                                                 padding: EdgeInsets.all(15),
-                                                 child: Column(
-                                                   children: <Widget>[
-                                                     Align(
-                                                       alignment: Alignment.topLeft,
-                                                       child: Text(match.repository.type + ' ' + match.repository.getTitle()) ,
-                                                     ),
-                                                     Align(
-                                                       alignment: Alignment.topLeft,
-                                                       child: Text("Quantidade de músicas: " + match.game_songs_count.toString()) ,
-                                                     ),
-                                                     Align(
-                                                       alignment: Alignment.bottomRight,
-                                                       child: FlatButton(
-                                                         onPressed: () {
-                                                           match.deleteFromFirebase();
-                                                         },
-                                                         color: Colors.red,
-                                                         child: Text(
-                                                           buttonString,
-                                                           style: TextStyle(
-                                                               color: Colors.white,
-                                                               fontSize: 10
-                                                           ),
-                                                         ),
-                                                       ),
-                                                     ),
-                                                   ],
-                                                 ),
-                                               ),
-                                             )
-                                           ],
-                                         ),
 
-                                       ],
-                                     ),
-                                   )
-                               ),
-                             ),
-                           );
 
-                           cards.add(card);
+                          if(match.invite == false) {
+                            buttonString = "Jogar!";
+                            buttonColor = Theme.of(context).primaryColor;
+                             buttonAction = () {
+                                print('oi gente');
+                            };
+                          }
+                          else {
+                            buttonColor = Colors.red;
+                            buttonAction = () {
+                              match.deleteFromFirebase();
+                            };
+                          }
+
+                          card = matchCard(
+                              buttonText: buttonString,
+                              buttonColor: buttonColor,
+                              match: match,
+                              context: context,
+                              cardTitle: visitorPlayerString,
+                              buttonAction: buttonAction
+                          );
+
+                          cards.add(card);
                         }
                         else { // Convites que o jogador recebeu
                           if(match.status != Match.STATUS_INVITE_REJECTED) {
-                            card = Padding(
-                              padding: EdgeInsets.all(10),
-                              child: GestureDetector(
-                                onLongPress: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          content: Row(
-                                              children: [
-                                                Expanded(
-                                                  child: Padding(
-                                                    padding: EdgeInsets.all(4),
-                                                    child: FlatButton(
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                        Navigator.push(context, MaterialPageRoute(
-                                                            builder: (context) => MatchDetails(match)
-                                                        ));
-                                                      },
-                                                      child: Text('Detalhes',
-                                                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
-                                                      ),
-                                                      color: Theme.of(context).primaryColor,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: Padding(
-                                                    padding: EdgeInsets.all(4),
-                                                    child: FlatButton(
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          match.status = Match.STATUS_INVITE_REJECTED;
-                                                        });
-                                                        match.updateMatchFirebase(match);
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: Text('Recusar',
-                                                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
-                                                      ),
-                                                      color: Colors.red,
-                                                    ),
-                                                  ),
-                                                )
-                                              ]
-                                          ),
-                                        );
-                                      }
-                                  );
+
+                            visitorPlayerString = snapshot.data.documents[i]["hostPlayerName"] + " desafiou você";
+                            Widget floatingMenuPrefixButton;
+
+                            if(match.invite == true) {
+                              buttonColor = Colors.green;
+                              buttonString = "Aceitar desafio";
+                              buttonAction = () {
+                                match.acceptMatchFirebase();
+                              };
+
+                              floatingMenuPrefixButton = FlatButton(
+                                onPressed: () {
+                                  setState(() {
+                                    match.status = Match.STATUS_INVITE_REJECTED;
+                                  });
+                                  Navigator.pop(context);
+                                  match.updateMatchFirebase(match);
                                 },
-                                child: Card(
-
-                                    elevation: 15,
-                                    child: Padding(
-                                      padding: EdgeInsets.all(10),
-                                      child: Column(
-                                        children: <Widget>[
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Text(snapshot.data.documents[i]["hostPlayerName"] + " desafiou você"),
-                                          ),
-                                          Divider(),
-                                          Row(
-                                            children: <Widget>[
-                                              Expanded(
-                                                child: Padding(
-                                                  padding: EdgeInsets.all(15),
-                                                  child: Column(
-                                                    children: <Widget>[
-                                                      Align(
-                                                        alignment: Alignment.topRight,
-                                                        child: Text(match.repository.type + ' ' + match.repository.getTitle()) ,
-                                                      ),
-                                                      Align(
-                                                        alignment: Alignment.topRight,
-                                                        child: Text("Quantidade de músicas: " + match.game_songs_count.toString()) ,
-                                                      ),
-                                                      Align(
-                                                        alignment: Alignment.bottomLeft,
-                                                        child: FlatButton(
-                                                          onPressed: () {
-//                                                          match.deleteFromFirebase();
-                                                          },
-                                                          color: Colors.green,
-                                                          child: Text(
-                                                            "Aceitar desafio",
-                                                            style: TextStyle(
-                                                                color: Colors.white,
-                                                                fontSize: 10
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Image.network(
-                                                match.repository.image,
-                                                width: 80,
-                                                height: 80,
-                                              ),
-                                            ],
-                                          ),
-
-                                        ],
-                                      ),
-                                    )
+                                color: Colors.red,
+                                child: Text(
+                                  "Recusar",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold
+                                  ),
                                 ),
-                              ),
+                              );
+                            }
+                            else {
+                              buttonString = "Jogar";
+                              buttonColor = Theme.of(context).primaryColor;
+                              buttonAction = () {
+                                print('oi gente bora jogar');
+                              };
+                            }
+
+                            card = matchCard(
+                                buttonText: buttonString,
+                                buttonColor: buttonColor,
+                                match: match,
+                                context: context,
+                                cardTitle: visitorPlayerString,
+                                buttonAction: buttonAction,
+                                floatingMenuPrefixButton: floatingMenuPrefixButton
                             );
 
                             cards.add(card);
                           }
                         }
-
-//                          cards.add(card);
-//                        }
 
                       }
                       return ListView(
@@ -323,108 +188,35 @@ class _LobbyScreenState extends State<LobbyScreen> {
                     if(snapshot.connectionState == ConnectionState.active) {
                       List<Widget> cards = List<Widget>();
 
-                      for (int i = 0; i < snapshot.data.documents.length; i++) {
+                      for (int i = 0; i < snapshot.data.documents.length; i++) { //Convites abertos de outros jogadores
 
                         Match match = Match.fromMap(snapshot.data.documents[i].data);
                         match.firebaseID = snapshot.data.documents[i].documentID;
 
                         if(snapshot.data.documents[i].data["hostPlayer"] != Session.firebaseUser.uid) {
 
-//                          String buttonText = match.status == Match.STATUS_INVITE_REJECTED ? "Desafio recusado.\nExcluir convite" : "Cancelar desafio";
+                          Widget card;
+                          String buttonString = "Entrar na partida";
+                          Color buttonColor = Colors.green;
+                          String visitorPlayerString = "Partida criada por " + match.hostPlayerName;
+                          Function buttonAction = () {
+                            print('entrou aqui');
+                            setState(() {
+                              match.visitorPlayer = Session.firebaseUser.uid;
+                              match.visitorPlayerName = Session.player.name;
+                              match.players[match.players.indexOf("open")] = Session.firebaseUser.uid;
+                            });
 
-                          Widget card = Padding(
-                            padding: EdgeInsets.all(10),
-                            child: GestureDetector(
-                              onLongPress: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        content: Row(
-                                            children: [
-                                              Expanded(
-                                                child: Padding(
-                                                  padding: EdgeInsets.all(4),
-                                                  child: FlatButton(
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                      Navigator.push(context, MaterialPageRoute(
-                                                          builder: (context) => MatchDetails(match)
-                                                      ));
-                                                    },
-                                                    child: Text('Detalhes',
-                                                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
-                                                    ),
-                                                    color: Theme.of(context).primaryColor,
-                                                  ),
-                                                ),
-                                              ),
-                                            ]
-                                        ),
-                                      );
-                                    }
-                                );
-                              },
-                              child: Card(
+                            match.acceptMatchFirebase();
+                          };
 
-                                  elevation: 15,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(10),
-                                    child: Column(
-                                      children: <Widget>[
-                                        Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Text("Partida criada por " + snapshot.data.documents[i]["hostPlayerName"]),
-                                        ),
-                                        Divider(),
-                                        Row(
-                                          children: <Widget>[
-                                            Image.network(
-                                              match.repository.image,
-                                              width: 80,
-                                              height: 80,
-                                            ),
-                                            Expanded(
-                                              child: Padding(
-                                                padding: EdgeInsets.all(15),
-                                                child: Column(
-                                                  children: <Widget>[
-                                                    Align(
-                                                      alignment: Alignment.topLeft,
-                                                      child: Text(match.repository.type + ' ' + match.repository.getTitle()) ,
-                                                    ),
-                                                    Align(
-                                                      alignment: Alignment.topLeft,
-                                                      child: Text("Quantidade de músicas: " + match.game_songs_count.toString()) ,
-                                                    ),
-                                                    Align(
-                                                      alignment: Alignment.bottomRight,
-                                                      child: FlatButton(
-                                                        onPressed: () {
-                                                          //
-                                                        },
-                                                        color: Colors.green,
-                                                        child: Text(
-                                                          "Entrar na partida",
-                                                          style: TextStyle(
-                                                              color: Colors.white,
-                                                              fontSize: 10
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-
-                                      ],
-                                    ),
-                                  )
-                              ),
-                            ),
+                          card = matchCard(
+                            buttonText: buttonString,
+                            buttonColor: buttonColor,
+                            match: match,
+                            context: context,
+                            cardTitle: visitorPlayerString,
+                            buttonAction: buttonAction
                           );
 
                           cards.add(card);
@@ -463,5 +255,129 @@ class _LobbyScreenState extends State<LobbyScreen> {
         );
 //      }
 //    );
+  }
+
+  Widget matchCard ({
+    @required String buttonText,
+    @required Color buttonColor,
+    @required Match match,
+    @required BuildContext context,
+    @required String cardTitle,
+    @required Function buttonAction,
+    Widget floatingMenuPrefixButton
+  }) {
+
+    List<Widget> floatingMenuActions = List<Widget>();
+    if(floatingMenuPrefixButton != null) {
+
+
+      floatingMenuActions.add(
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.all(2),
+            child: floatingMenuPrefixButton,
+          ),
+        )
+      );
+    }
+    floatingMenuActions.add(
+      Expanded(
+        child: Padding(
+          padding: EdgeInsets.all(2),
+          child: FlatButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => MatchDetails(match)
+              ));
+            },
+            child: Text('Detalhes',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            color: Theme.of(context).primaryColor,
+          ),
+        ),
+      ),
+    );
+
+    return Padding(
+      padding: EdgeInsets.all(10),
+      child: GestureDetector(
+        onLongPress: () {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  content: Row(
+                    children: floatingMenuActions
+                  ),
+                );
+              }
+          );
+        },
+        child: Card(
+
+            elevation: 15,
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                children: <Widget>[
+                  Align(
+                    alignment: Session.firebaseUser.uid == match.hostPlayer ? Alignment.topLeft : Alignment.topRight,
+                    child: Text(cardTitle),
+                  ),
+                  Divider(),
+                  Row(
+                    children: <Widget>[
+                      match.hostPlayer == Session.firebaseUser.uid ? Image.network(
+                        match.repository.image,
+                        width: 80,
+                        height: 80,
+                      ) : Container(),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.all(15),
+                          child: Column(
+                            children: <Widget>[
+                              Align(
+                                alignment: Session.firebaseUser.uid == match.hostPlayer ? Alignment.topLeft : Alignment.topRight,
+                                child: Text(match.repository.type + ' ' + match.repository.getTitle()) ,
+                              ),
+                              Align(
+                                alignment: Session.firebaseUser.uid == match.hostPlayer ? Alignment.topLeft : Alignment.topRight,
+                                child: Text("Quantidade de músicas: " + match.game_songs_count.toString()) ,
+                              ),
+                              Align(
+                                alignment: Session.firebaseUser.uid == match.hostPlayer ? Alignment.bottomRight : Alignment.bottomLeft,
+                                child: FlatButton(
+                                  onPressed: buttonAction,
+                                  color: buttonColor,
+                                  child: Text(
+                                    buttonText,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 10
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      match.hostPlayer != Session.firebaseUser.uid ? Image.network(
+                        match.repository.image,
+                        width: 80,
+                        height: 80,
+                      ) : Container(),
+                    ],
+                  ),
+
+                ],
+              ),
+            )
+        ),
+      ),
+    );
   }
 }
