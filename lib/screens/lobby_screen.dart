@@ -9,6 +9,7 @@ import 'package:guess_the_song/model/user.dart';
 import 'package:guess_the_song/screens/match_details.dart';
 import 'package:guess_the_song/screens/new_game.dart';
 import 'package:guess_the_song/utils/session.dart';
+import 'package:guess_the_song/screens/match_screen.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class LobbyScreen extends StatefulWidget {
@@ -90,9 +91,9 @@ class _LobbyScreenState extends State<LobbyScreen> {
                           if(match.invite == false) {
                             buttonString = "Jogar!";
                             buttonColor = Theme.of(context).primaryColor;
-                             buttonAction = () {
-                                print('oi gente');
-                            };
+                              buttonAction = () {
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => MatchScreen(match)));
+                              };
                           }
                           else {
                             buttonColor = Colors.red;
@@ -147,7 +148,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
                               buttonString = "Jogar";
                               buttonColor = Theme.of(context).primaryColor;
                               buttonAction = () {
-                                print('oi gente bora jogar');
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => MatchScreen(match)));
                               };
                             }
 
